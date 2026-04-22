@@ -1,0 +1,31 @@
+# Core CHDP Hyperparameters
+
+# Diffusion
+diffusion_steps: 15
+noise_schedule: "linear"
+
+# Architecture
+latent_dim: 8
+hidden_dim: 256
+num_layers: 3
+
+# Training
+batch_size: 256
+buffer_size: 100000
+gamma: 0.99
+tau: 0.005
+lr_actor: 0.0001
+lr_critic: 0.0003
+lr_codebook: 0.0001
+
+# DQL
+eta: 5.0
+
+# Update
+sequential_update: true
+target_update_freq: 2
+
+# Evaluation
+eval_episodes: 5
+eval_freq: 10000
+total_steps: 500000

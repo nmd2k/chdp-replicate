@@ -1,0 +1,132 @@
+# Experiment Configuration for CHDP Reproduction
+# Based on arXiv:2601.05675
+
+# Environments to evaluate
+environments:
+  - name: "goal"
+    episodes: 100
+    max_steps: 100
+  - name: "hard_goal"
+    episodes: 100
+    max_steps: 150
+  - name: "platform"
+    episodes: 100
+    max_steps: 100
+  - name: "catch_point"
+    episodes: 100
+    max_steps: 100
+  - name: "hard_move_4"
+    episodes: 100
+    max_steps: 100
+    difficulty: 4
+  - name: "hard_move_6"
+    episodes: 100
+    max_steps: 100
+    difficulty: 6
+  - name: "hard_move_8"
+    episodes: 100
+    max_steps: 100
+    difficulty: 8
+  - name: "hard_move_10"
+    episodes: 100
+    max_steps: 100
+    difficulty: 10
+
+# Training configuration
+training:
+  total_steps: 500000
+  batch_size: 256
+  buffer_size: 100000
+  gamma: 0.99
+  tau: 0.005
+  lr_actor: 0.0001
+  lr_critic: 0.0003
+  lr_codebook: 0.0001
+  warmup_steps: 10000
+  gradient_clip: 1.0
+
+# Diffusion configuration
+diffusion:
+  steps: 15
+  noise_schedule: "linear"
+  beta_start: 0.0001
+  beta_end: 0.02
+
+# Architecture
+architecture:
+  latent_dim: 8
+  hidden_dim: 256
+  num_layers: 3
+  codebook_size: 512
+  codebook_dim: 16
+
+# DQL (Diffusion Q-Learning) parameters
+dql:
+  eta: 5.0
+  num_samples: 64
+
+# Update strategy
+update:
+  sequential: true
+  target_update_freq: 2
+
+# Evaluation protocol
+evaluation:
+  episodes: 5
+  frequency: 10000
+  average_final_count: 5
+
+# Logging
+logging:
+  log_dir: "results/logs"
+  tensorboard: true
+  csv_export: true
+  save_checkpoints: true
+  checkpoint_freq: 50000
+
+# Baselines to compare
+baselines:
+  - "sac"
+  - "td3"
+  - "ddpg"
+  - "ppo"
+  - "diffusion_bc"
+  - "diffusion_rl"
+  - "cql"
+
+# Ablation study variants
+ablation:
+  - name: "full"
+    diffusion_policy: true
+    codebook: true
+    sequential_update: true
+  - name: "w_o_diffusion"
+    diffusion_policy: false
+    codebook: true
+    sequential_update: true
+  - name: "w_o_codebook"
+    diffusion_policy: true
+    codebook: false
+    sequential_update: true
+  - name: "w_o_sequential"
+    diffusion_policy: true
+    codebook: true
+    sequential_update: false
+  - name: "w_o_both"
+    diffusion_policy: false
+    codebook: false
+    sequential_update: false
+
+# Random seeds for reproducibility
+seeds: [0, 1, 2, 3, 4]
+
+# Target results (from paper Table 1)
+targets:
+  goal: { mean: 80.9, std: 4.9 }
+  hard_goal: { mean: 79.5, std: 5.0 }
+  platform: { mean: 99.7, std: 0.2 }
+  catch_point: { mean: 93.8, std: 0.6 }
+  hard_move_4: { mean: 94.2, std: 1.7 }
+  hard_move_6: { mean: 93.9, std: 1.0 }
+  hard_move_8: { mean: 90.6, std: 2.2 }
+  hard_move_10: { mean: 79.8, std: 5.4 }
